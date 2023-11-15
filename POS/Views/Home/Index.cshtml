@@ -1,0 +1,16 @@
+﻿@using POS.Domain.Model
+@using Telerik.Web.Mvc.UI
+@model IQueryable<Establishment>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<section class="row">
+    <div class="four columns">
+        @foreach(Establishment p in Model)
+        {
+            Html.RenderPartial("_EstablishmentSummary", p);
+        }
+    </div>
+</section>

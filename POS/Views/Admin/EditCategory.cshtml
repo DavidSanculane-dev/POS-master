@@ -1,0 +1,15 @@
+﻿@model POS.Domain.Model.Category
+
+@{
+    ViewBag.Title = "Admin: Edit Category" + @Model.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Edit Category @Model.Name</h1>
+@using (Html.BeginForm("EditCategory", "Admin"))
+{
+    @Html.AntiForgeryToken()
+    @Html.EditorForModel()
+    <input type="submit" value="Save" />
+    @Html.ActionLink("Cancel and return to the list", "IndexCategory")
+}

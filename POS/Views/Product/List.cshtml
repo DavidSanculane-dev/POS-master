@@ -1,0 +1,28 @@
+﻿@using POS.Domain.Model
+@model IQueryable<Category>
+
+@{
+    ViewBag.Title = "List";
+}
+
+@foreach (Category p in Model)
+{
+    Html.RenderPartial("_CategorySummary", p);
+}
+   
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function getProducts(f) {
+            f.preventDefault();
+            f.stopPropagation();
+            var $category = $(this).closest(".category");
+            var categoryName = $category.attr("id");
+            $('.divResult', $category).load("@Url.Action("ProductList", "Product")", {
+                category: categoryName
+            });
+        }
+
+        $(document).on("click", ".category", getProducts);
+    });
+</script>

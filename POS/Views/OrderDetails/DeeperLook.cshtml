@@ -1,0 +1,60 @@
+﻿@using POS.Models
+@using Telerik.Web.Mvc.UI
+@model IEnumerable<POS.Models.DeeperLookViewModel>
+@{
+    ViewBag.Title = "Deeper Look";
+}
+
+<h2>Deeper Look</h2>
+@(Html.Telerik().Grid<DeeperLookViewModel>()
+            .Name("Stats")
+        .Columns(columns =>
+        {
+            columns.Bound(o => o.Stat).Width(100);
+            columns.Bound(o => o.Average).Width(75).Format("{0:C}");
+            columns.Bound(o => o.Median).Width(75).Format("{0:C}");
+        })
+        .ClientEvents(events => events.OnRowDataBound("hourly_onRowDataBound"))
+        .DetailView(details => details.ClientTemplate(
+            Html.Telerik().Grid<DeeperLookViewModel>()
+                .Name("DeeperStat_<#= DeeperLookViewModelId #>")
+                .Columns(columns =>
+                {
+                    columns.Bound(o => o.Stat).Width(90);
+                    columns.Bound(o => o.Average).Width(75).Format("{0:C}");
+                    columns.Bound(o => o.Median).Width(75).Format("{0:C}");
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("_DeeperStat", "OrderDetails", new { id = "<#= DeeperLookViewModelId #>" }))
+                .Sortable()
+                .Scrollable(scrolling => scrolling.Height("auto"))
+                .Scrollable(scrolling => scrolling.Enabled(false))
+                .Filterable()
+                .ToHtmlString()
+                ))
+        .DataBinding(dataBinding => dataBinding.Ajax().Select("_DeeperLook", "OrderDetails").Enabled((bool)ViewData["ajax"]))
+        .Pageable(paging => paging.PageSize(5))
+        .Scrollable(scrolling => scrolling.Height("auto"))
+        .Scrollable(scrolling => scrolling.Enabled(false))
+        .Sortable()
+)
+      
+      
+<script type="text/javascript">
+
+          function expandFirstRow(grid, row) {
+              if (grid.$rows().index(row) == 0) {
+                  grid.expandRow(row);
+              }
+          }
+
+          function hourly_onRowDataBound(e) {
+              var grid = $(this).data('tGrid');
+              expandFirstRow(grid, e.row);
+          }
+
+          function deeperStats_onRowDataBound(e) {
+              var grid = $(this).data('tGrid');
+              expandFirstRow(grid, e.row);
+          }
+          
+</script> 

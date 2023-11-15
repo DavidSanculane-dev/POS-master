@@ -1,0 +1,6 @@
+﻿@model POS.Domain.Model.Establishment
+
+<div class = "establishment" id= "@Model.EstablishmentId">
+    <h1 class="oval btn">@Model.Name</h1>
+        @Html.ActionLink(Model.Name ,"Establishment", new { id = Model.EstablishmentId })
+</div>

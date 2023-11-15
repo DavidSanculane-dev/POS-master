@@ -1,0 +1,21 @@
+﻿@model POS.Domain.Model.Product
+           
+<div class = "item">
+    <p class="btn tertiary">@Model.Name</p>
+    @if (Model.ImageData != null)
+    {
+        <div style="float:right;margin-right:20px">
+            <img width="75" height="75" src="@Url.Action("GetImage", "Product", new { Model.ProductId })" alt="thumbnail"/>
+        </div>
+    }
+    <p>@Model.Description</p>
+
+    @using(Html.BeginForm("AddToCart", "Cart")) {
+        @Html.HiddenFor(x => x.ProductId)
+        @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+        <input type="submit" class="btn" value="+ Add to cart" />
+    }
+
+    <h4>@Model.Price.ToString("c")</h4>
+</div>
+
