@@ -10,7 +10,8 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using POS.Domain.Properties;
 
 namespace POS.Domain.Validators
@@ -38,20 +39,24 @@ namespace POS.Domain.Validators
 
         #region Public Methods and Operators
 
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(
+        public IEnumerable<System.Web.Mvc.ModelClientValidationRule> GetClientValidationRules(
             ModelMetadata metadata, ControllerContext context)
         {
-            var rule = new ModelClientValidationRule
-                           {
+            var rule = new System.Web.Mvc.ModelClientValidationRule
+            {
                                ErrorMessage = Resources.InvalidInputCharacter,
                                ValidationType = "textlineinput"
                            };
 
             rule.ValidationParameters.Add("pattern", Resources.TextLineInputValidatorRegEx);
 
-            return new List<ModelClientValidationRule> {rule};
+            return new List<System.Web.Mvc.ModelClientValidationRule> {rule};
         }
 
         #endregion
+    }
+
+    internal interface IClientValidatable
+    {
     }
 }

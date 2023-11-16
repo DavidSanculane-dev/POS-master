@@ -41,7 +41,7 @@ namespace POS.Infrastructure
             }
             else
             {
-                context.Entry(order).State = EntityState.Modified;
+                context.Entry(order).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();
@@ -61,9 +61,9 @@ namespace POS.Infrastructure
             {
                 foreach (var item in order.OrderDetails)
                 {
-                    context.Entry(item).State = EntityState.Modified;
+                    context.Entry(item).State = (System.Data.Entity.EntityState)EntityState.Modified;
                 }
-                context.Entry(order).State = EntityState.Modified;
+                context.Entry(order).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();

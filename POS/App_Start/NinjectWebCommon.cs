@@ -1,8 +1,5 @@
-using POS.Domain.ApplicationService;
-using POS.Infrastructure;
-
-[assembly: WebActivator.PreApplicationStartMethod(typeof(POS.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(POS.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(POS.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(POS.App_Start.NinjectWebCommon), "Stop")]
 
 namespace POS.App_Start
 {
@@ -11,36 +8,32 @@ namespace POS.App_Start
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
-    using Domain.Abstract;
-
     using Ninject;
     using Ninject.Web.Common;
-
-    using POS.Controllers;
-    using POS.Infrastructure.Membership;
+    using Ninject.Web.Common.WebHost;
 
     public static class NinjectWebCommon 
     {
-        private static readonly Bootstrapper Bootstrapper = new Bootstrapper();
+        private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
-        /// Starts the application
+        /// Starts the application.
         /// </summary>
         public static void Start() 
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            Bootstrapper.Initialize(CreateKernel);
+            bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
         public static void Stop()
         {
-            Bootstrapper.ShutDown();
+            bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -48,11 +41,18 @@ namespace POS.App_Start
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            
-            RegisterServices(kernel);
-            return kernel;
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+                RegisterServices(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -61,10 +61,6 @@ namespace POS.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IProductRepository>().To<EfProductRepository>();
-            kernel.Bind<IEstablishmentRepository>().To<EfEstablishmentRepository>();
-            kernel.Bind<IOrderProcessor>().To<EfOrderRepository>();
-            kernel.Bind<ICartApplicationService>().To<CartApplicationService>();
-        }        
+        }
     }
 }

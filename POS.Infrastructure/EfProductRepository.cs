@@ -69,7 +69,7 @@ namespace POS.Infrastructure
             }
             else
             {
-                context.Entry(category).State = EntityState.Modified;
+                context.Entry(category).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();
@@ -83,7 +83,7 @@ namespace POS.Infrastructure
             }
             else
             {
-                context.Entry(parentCategory).State = EntityState.Modified;
+                context.Entry(parentCategory).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();
@@ -97,7 +97,7 @@ namespace POS.Infrastructure
             }
             else
             {
-                context.Entry(product).State = EntityState.Modified;
+                context.Entry(product).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();

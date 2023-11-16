@@ -41,7 +41,7 @@ namespace POS.Infrastructure
             }
             else
             {
-                context.Entry(establishment).State = EntityState.Modified;
+                context.Entry(establishment).State = (System.Data.Entity.EntityState)EntityState.Modified;
             }
 
             context.SaveChanges();
